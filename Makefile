@@ -26,7 +26,7 @@ LFLAGS = -L /home/julyan/boost_1_67_0/stage/lib
 LIBS = -lboost_system -lpthread
 
 # define the C source files
-SRCS = main.cpp functions.cpp
+SRCS = main.cpp
 
 # define the C object files 
 #
@@ -50,7 +50,7 @@ MAIN = main
 .PHONY: depend clean
 
 all:    $(MAIN)
-	@echo  Simple compiler named main has been compiled
+	@echo  Compilação completa
 
 $(MAIN): $(OBJS) 
 	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)

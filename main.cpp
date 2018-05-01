@@ -1,5 +1,5 @@
 #include <iostream>
-#include "SimpleSerial.h"
+#include "SimpleSerial.hpp"
 
 using namespace std;
 using namespace boost;
@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 {
     try {
 
-        SimpleSerial serial("/dev/ttyUSB0",115200);
+        SimpleSerial serial("/dev/ttyACM0",9600);
 
         serial.writeString("Hello world\n");
 
