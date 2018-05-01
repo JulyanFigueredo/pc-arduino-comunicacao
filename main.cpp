@@ -6,13 +6,23 @@ using namespace boost;
 
 int main(int argc, char* argv[])
 {
+    string message;
     try {
 
         SimpleSerial serial("/dev/ttyACM0",9600);
 
-        serial.writeString("g\n");
+        for(;;)
+        {
+            std::cout << ">>";
+            std::cin >> message;
+            if(message.compare("fim") == 0 )
+                break;
+            
+            serial.writeString(message);
 
-        cout<<serial.readLine()<<endl;
+            cout<<serial.readLine()<<endl;
+        }
+        
 
     } catch(boost::system::system_error& e)
     {
