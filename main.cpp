@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
 
         SimpleSerial serial("/dev/ttyACM0",9600);
 
-        serial.writeString("Hello world\n");
+        serial.writeString("g\n");
 
         cout<<serial.readLine()<<endl;
 
