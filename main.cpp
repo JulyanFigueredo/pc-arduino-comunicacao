@@ -12,8 +12,88 @@
 using namespace std;
 using namespace boost;
 
+int coluna[LINHAS_MATRIZ], mensagem[LINHAS][PLACAS], pilha=0, linha_da_placa=0, 
+    coluna_da_placa=0, n_placa=0;
+
+void ConfigurarMatriz()
+{
+    
+    //o vetor coluna[] recebe 24 valores para as 24 linhas da matriz desse sistema
+    int i=0, j=0;
+
+    for(i=0; i<LINHAS; i++)
+    {
+        for(j=0; j<PLACAS; j++)
+        {
+            mensagem[i][j] = i << 1;
+            //std::cout << ">>"<< bitset<8>(mensagem[i][j]) << endl;    
+        }
+        
+    }
+
+    std::cout << "DIGITE A CONFIGURAÇÃO DA MATRIZ (24 linhas por 12 colunas)" << endl;
+    for(i=0; i<LINHAS_MATRIZ; i++)
+    {
+        std::cout << "LINHA "<< std::dec << i << ", COLUNA:";
+        std::cin >> coluna[i]; //de 0 a 11, tem 12 colunas
+        
+        //tendo a linha(i), descobrir em qual pilha(0, 1 ou 2) de placas está essa linha
+        pilha = i/LINHAS;
+        std::cout << "pilha: "<< pilha << endl;
+
+        //descobrir a linha da placa, usado na matriz de bytes
+        linha_da_placa = i%LINHAS;
+        std::cout << "linha da placa: "<< linha_da_placa << endl;
+
+        //descobrir a coluna da placa, usado na matriz de bytes
+        coluna_da_placa = coluna[i]%COLUNAS;
+        std::cout << "coluna da placa: "<< coluna_da_placa << endl;
+
+        //descobrir o nº da placa(de 0 a 8)
+        n_placa = pilha*ORDEM + coluna[i]/4;
+        std::cout << "número placa :"<< n_placa << endl;
+
+        mensagem[linha_da_placa][n_placa] |= (1 << (7-coluna_da_placa)); 
+        std::cout << ">>"<< bitset<8>(mensagem[linha_da_placa][n_placa]) << endl;  
+        std::cout << ">>"<< std::hex << std::uppercase << mensagem[linha_da_placa][n_placa] << endl; 
+    }
+}
+
+
 int main(int argc, char* argv[])
 {
+    try {
+
+        SimpleSerial serial("/dev/ttyACM1",9600);
+        std::cout << "Abriu a porta serial" << endl;
+        //ConfigurarMatriz();
+
+        int i,j;
+        unsigned char m;
+        m = 'a';
+        for(i=0; i<LINHAS; i++)
+        {
+            for(j=0; j<PLACAS; j++)
+            {
+                std::cout << "entrou no for" << endl;
+                //std::cout << ">>"<< std::hex << mensagem[i][j] << "
+                serial.writeString(m);
+                //serial.writeString(m);
+                std::cout << serial.readLine() << endl;
+                //serial.writeString((char*)mensagem[i][j]);
+            }
+            std::cout << " "<< endl;
+
+        }
+
+    } catch(boost::system::system_error& e)
+    {
+        cout<<"Error: "<<e.what()<<endl;
+        return 1;
+    }
+
+// tendo essa grande matriz de bytes que configura a matriz de interconexões, temos que enviar pela serial
+
     // string message;
     // try {
 
@@ -21,8 +101,6 @@ int main(int argc, char* argv[])
 
     //     for(;;)
     //     {
-    //         std::cout << ">>";
-    //         std::cin >> message;
     //         if(message.compare("fim") == 0 )
     //             break;
             
@@ -46,46 +124,5 @@ int main(int argc, char* argv[])
 //Em cada placa, cada linha pode se conectar a qualquer coluna. Porém, neste sistema, é necessário
 //que cada coluna receba qualquer linha, mas cada linha deve se conectar à uma só coluna. Isso vem do 
 //fato de que em um circuito elétrico, cada terminal de componente pode ser conectado à um unico nó. 
-
-    int coluna[LINHAS_MATRIZ], mensagem[LINHAS][PLACAS], pilha=0, linha_da_placa=0, 
-    coluna_da_placa=0, n_placa=0;
-    //o vetor coluna[] recebe 24 valores para as 24 linhas da matriz desse sistema
-    int i=0, j=0;
-
-    for(i=0; i<LINHAS; i++)
-    {
-        for(j=0; j<PLACAS; j++)
-        {
-            mensagem[i][j] = i << 1;
-            //std::cout << ">>"<< bitset<8>(mensagem[i][j]) << endl;    
-        }
-        
-    }
-
-    std::cout << "DIGITE A CONFIGURAÇÃO DA MATRIZ (24 linhas por 12 colunas)" << endl;
-    for(i=0; i<LINHAS_MATRIZ; i++)
-    {
-        std::cout << "LINHA "<< i << ", COLUNA:";
-        std::cin >> coluna[i]; //de 0 a 11, tem 12 colunas
-        
-        //tendo a linha(i), descobrir em qual pilha(0, 1 ou 2) de placas está essa linha
-        pilha = i/LINHAS;
-        std::cout << "pilha: "<< pilha << endl;
-
-        //descobrir a linha da placa, usado na matriz de bytes
-        linha_da_placa = i%LINHAS;
-        std::cout << "linha da placa: "<< linha_da_placa << endl;
-
-        //descobrir a coluna da placa, usado na matriz de bytes
-        coluna_da_placa = coluna[i]%COLUNAS;
-        std::cout << "coluna da placa: "<< coluna_da_placa << endl;
-
-        //descobrir o nº da placa(de 0 a 8)
-        n_placa = pilha*ORDEM + coluna[i]/4;
-        std::cout << "número placa :"<< n_placa << endl;
-
-        mensagem[linha_da_placa][n_placa] |= (1 << (7-coluna_da_placa)); 
-        std::cout << ">>"<< bitset<8>(mensagem[linha_da_placa][n_placa]) << endl;  
-    }
 
 }

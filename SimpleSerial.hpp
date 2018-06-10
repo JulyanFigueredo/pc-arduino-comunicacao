@@ -26,6 +26,11 @@ public:
         boost::asio::write(serial,boost::asio::buffer(s.c_str(),s.size()));
     }
 
+    void writeString(unsigned char s)
+    {
+        boost::asio::write(serial,boost::asio::buffer(s,1);
+    }
+
     /**
      * Blocks until a line is received from the serial device.
      * Eventual '\n' or '\r\n' characters at the end of the string are removed.
