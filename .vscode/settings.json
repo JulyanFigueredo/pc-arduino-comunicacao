@@ -27,5 +27,6 @@
         "typeinfo": "cpp",
         "utility": "cpp",
         "bitset": "cpp"
-    }
+    },
+    "python.pythonPath": "/usr/bin/python3"
 }
