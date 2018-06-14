@@ -2,7 +2,7 @@
 
 import serial
 import time
-
+import struct
 
 ser = serial.Serial(port='/dev/ttyACM0', baudrate=9600, bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE, timeout=2) 
 try:
@@ -85,15 +85,24 @@ def MontarExemplo(mensagem):
     print(mensagem)
     return mensagem
 
+def MudarTensao():
+    dac_value = float(input("Digite o valor da tensão variável(0-5V): "))
+    dac_value_to_send = bytearray(struct.pack("f", dac_value)) 
+    dac_value_to_send.insert(0,67);
+    ser.write(dac_value_to_send)
+    
+    return
+
 def SAIR():
     ser.close()
     exit()
     return 
 
 while 1:
-    val = input("0 - Montar Exemplo  1 - Limpar Matriz  2 - Configurar Matriz  3 - Mandar Dados  4 - SAIR: ")
-    if ( val == '1' ): m = LimparMatriz()
+    val = input("0 - Montar Exemplo\n1 - Limpar Matriz\n2 - Configurar Matriz\n3 - Mandar Dados\n4 - Mudar Tensão\n5 - SAIR\nEscolha a opção: ")
+    if ( val == '0' ): m = MontarExemplo(m)
     if ( val == '2' ): m = ConfigurarMatriz(m)
     if ( val == '3' ): m = MandarDados(m)
-    if ( val == '4' ): SAIR()
+    if ( val == '4' ): MudarTensao()
+    if ( val == '5' ): SAIR()
     if ( val == '0' ): m = MontarExemplo(m)
